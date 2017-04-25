@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--spring 扫描包-->
+    <context:component-scan base-package="com.anan"/>
+
+    <!--添加配置文件 jdbc-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--使用dbcp 数据库连接池-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <!--mysql driver-->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <!--mysql url-->
+        <property name="url" value="${jdbc.url}"/>
+        <!--mysql 用户名-->
+        <property name="username" value="${jdbc.username}"/>
+        <!--mysql 数据库密码-->
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--注入mybatis SqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--添加数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--扫描包,设置别名-->
+        <property name="typeAliasesPackage" value="com.anan.entity"/>
+        <!--扫描mapper文件所在路径 坑:idea 需要放在 resource 下, 或者设置一下 classpath-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+
+    <!--扫描mapper-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--mapper 对应的接口-->
+        <property name="basePackage" value="com.anan.dao"/>
+        <!--注入 SqlSessionFactory-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+</beans>

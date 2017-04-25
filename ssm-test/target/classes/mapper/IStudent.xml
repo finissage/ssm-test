@@ -1,0 +1,45 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.anan.dao.IStudent">
+
+    <resultMap id="student" type="student">
+        <id column="stu_id" property="stuId"/>
+        <result column="stu_name" property="stuName"/>
+        <result column="stu_age" property="stuAge"/>
+        <association property="teacher" javaType="teacher">
+            <id column="tea_id" property="teaId"/>
+            <result column="tea_name" property="teaName"/>
+            <result column="tea_age" property="teaAge"/>
+            <result column="create_time" property="createTime"/>
+        </association>
+    </resultMap>
+
+
+    <select id="retrieveStudent" parameterType="int" resultMap="student">
+        select stu_id,stu_name,stu_age from student where stu_id = #{stuId}
+    </select>
+
+    <insert id="createStudent" parameterType="student">
+        insert into student(stu_name,stu_age) values(#{stuName}, #{stuAge})
+    </insert>
+
+    <select id="retrieveAll" resultMap="student">
+        select
+        s.stu_id,
+        s.stu_age,
+        s.stu_name,
+        s.tea_id,
+        t.tea_name,
+        t.tea_age,
+        t.create_time
+
+        from student s left join
+         teacher t on s.tea_id = t.tea_id
+    </select>
+
+    <!--测试删除方法-->
+    <delete id="deleteStudent" parameterType="int">
+        delete from student where stu_id = #{stuId}
+    </delete>
+</mapper>
