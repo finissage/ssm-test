@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.anan.dao.IStudent">
 
+    <!--映射的resultMap-->
     <resultMap id="student" type="student">
         <id column="stu_id" property="stuId"/>
         <result column="stu_name" property="stuName"/>
@@ -33,7 +34,6 @@
         t.tea_name,
         t.tea_age,
         t.create_time
-
         from student s left join
          teacher t on s.tea_id = t.tea_id
     </select>
